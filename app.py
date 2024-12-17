@@ -58,8 +58,10 @@ def submit():
 # Route to serve your custom thankyou.html
 @app.route('/thankyou')
 def thank_you():
-    return render_template('thankyou.html')  # This will render your custom thankyou.html
+    return render_template('thankyou.html')
 
-# Run the server
-if __name__ == '__main__':
-    app.run()
+# Vercel handler for the serverless function
+def handler(event, context):
+    from werkzeug.middleware.proxy_fix import ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+    return app
